@@ -22,13 +22,14 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y docker.io docker-compose-v2
 
-            # 2. Carpeta específica para el BACKEND (Diferente a la del frontend)
+            # 2. Carpeta independiente para el Backend
             rm -rf ~/innovatech-backend-deploy
             git clone https://github.com/${{ github.repository }} ~/innovatech-backend-deploy
 
-            # 3. Entrar y desplegar
-            cd ~/innovatech-backend-deploy
-            
-            # 4. Detener y levantar (Puerto 8081 configurado en tu docker-compose)
+            # 3. BUSCAR automáticamente la carpeta del docker-compose.yml
+            # Esto evita el error de "not found"
+            cd $(find ~/innovatech-backend-deploy -name "docker-compose.yml" -printf '%h' -quit)
+
+            # 4. Levantar el Backend
             sudo docker compose down || true
             sudo docker compose up -d --build
