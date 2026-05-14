@@ -26,4 +26,4 @@ jobs:
             fi
             cd innovatech-backend
             git pull origin deploy
-            sudo docker-compose up -d --build
+            sudo docker compose up -d --build
