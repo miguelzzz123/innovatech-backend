@@ -18,12 +18,17 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            # 1. Asegurar Docker
             sudo apt-get update
-            sudo apt-get install -y docker.io docker-compose
-            # Entrar a la carpeta o clonar si no existe
-            if [ ! -d "innovatech-backend" ]; then
-              git clone https://github.com/${{ github.repository }} innovatech-backend
-            fi
-            cd innovatech-backend
-            git pull origin deploy
+            sudo apt-get install -y docker.io docker-compose-v2
+
+            # 2. Carpeta específica para el BACKEND (Diferente a la del frontend)
+            rm -rf ~/innovatech-backend-deploy
+            git clone https://github.com/${{ github.repository }} ~/innovatech-backend-deploy
+
+            # 3. Entrar y desplegar
+            cd ~/innovatech-backend-deploy
+            
+            # 4. Detener y levantar (Puerto 8081 configurado en tu docker-compose)
+            sudo docker compose down || true
             sudo docker compose up -d --build
